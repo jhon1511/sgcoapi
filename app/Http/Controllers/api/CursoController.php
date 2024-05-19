@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Curso;
+use App\Models\Instructor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -47,10 +48,11 @@ class CursoController extends Controller
     public function show(string $id)
     {
         $curso= Curso::find($id);
+        $instructores = Instructor::all();
         if(is_null($curso)){
             return abort(404);
         }
-        return json_encode(['curso' => $curso]);
+        return json_encode(['curso' => $curso, 'instructores' => $instructores]);
     }
 
     /**
@@ -81,6 +83,6 @@ class CursoController extends Controller
         ->join('instructores', 'instructores.id', '=', 'cursos.instructor_id') 
         ->select('cursos.*',  'instructores.nombre as instructores')
         ->get();
-        return json_encode(['cursos' => $cursos]);
+        return json_encode(['cursos' => $cursos, 'success' => true]);
     }
 }

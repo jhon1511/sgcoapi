@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Curso;
+use App\Models\Estudiante;
 use Illuminate\Http\Request;
 use App\Models\Matriculacion;
 use Illuminate\Support\Facades\DB;
@@ -42,11 +44,13 @@ class MatriculacionController extends Controller
      */
     public function show(string $id)
     {
+        $estudiantes = Estudiante::all();
+        $cursos = Curso::all();
         $matriculacion= Matriculacion::find($id);
         if(is_null($matriculacion)){
             return abort(404);
         }
-        return json_encode(['matriculacion' => $matriculacion]);
+        return json_encode(['matriculacion' => $matriculacion,'estudiantes' => $estudiantes, 'cursos' => $cursos]);
     }
 
     /**
@@ -54,6 +58,7 @@ class MatriculacionController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        
         $matriculacion= Matriculacion::find($id);
         $matriculacion->id = $request->id;
         $matriculacion->curso_id = $request->curso_id;
@@ -76,6 +81,6 @@ class MatriculacionController extends Controller
         ->join('estudiantes', 'estudiantes.id', '=', 'matriculaciones.estudiante_id') 
         ->select('matriculaciones.*',  'cursos.titulo as curso', 'estudiantes.nombre as estudiante')
         ->get();
-        return json_encode(['matriculaciones' => $matriculaciones]);
+        return json_encode(['matriculaciones' => $matriculaciones, 'success' => true]);
     }
 }

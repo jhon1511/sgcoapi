@@ -56,8 +56,9 @@ class InstructorController extends Controller
     {
         $instructor = Instructor::find($id);
         $instructor->id = $request->id;
-        $instructor->name = $request->name;
-        $instructor->description = $request->description;
+        $instructor->nombre = $request->nombre;
+        $instructor->apellido = $request->apellido;
+        $instructor->especialidad = $request->especialidad;
         $instructor->save();
         return json_encode(['instructor' => $instructor]);
     }
@@ -70,6 +71,6 @@ class InstructorController extends Controller
         $instructor = Instructor::find($id);
         $instructor->delete();
         $instructores = Instructor::all();
-        return json_encode(['instructores' => $instructores]);
+        return json_encode(['instructores' => $instructores, 'success' => true]);
     }
 }

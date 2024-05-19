@@ -67,10 +67,10 @@ class EstudianteController extends Controller
      */
     public function destroy(string $id)
     {
-        $estudiante = Instructor::find($id);
+        $estudiante = Estudiante::find($id);
         $estudiante->delete();
         
         $estudiantes = Estudiante::all();
-        return json_encode(['estudiantes' => $estudiantes]);
+        return json_encode(['estudiantes' => $estudiantes, 'success' => true]);
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Evaluacion;
+use App\Models\Curso;
+use App\Models\Estudiante;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +20,7 @@ class EvaluacionController extends Controller
         $evaluaciones = DB::table('evaluaciones')
         ->join('cursos', 'cursos.id', '=', 'evaluaciones.curso_id') 
         ->join('estudiantes', 'estudiantes.id', '=', 'evaluaciones.estudiante_id') 
-        ->select('cursos.*',  'cursos.titulo as curso', 'estudiantes.nombre as estudiante')
+        ->select('evaluaciones.*',  'cursos.titulo as curso', 'estudiantes.nombre as estudiante')
         ->get();
         return json_encode(['evaluaciones' => $evaluaciones]);
     }
@@ -46,11 +48,13 @@ class EvaluacionController extends Controller
      */
     public function show(string $id)
     {
+        $estudiantes = Estudiante::all();
+        $cursos = Curso::all();
         $evaluacion= Evaluacion::find($id);
         if(is_null($evaluacion)){
             return abort(404);
         }
-        return json_encode(['evaluacion' => $evaluacion]);
+        return json_encode(['evaluacion' => $evaluacion,'estudiantes' => $estudiantes, 'cursos' => $cursos]);
     }
 
     /**
@@ -81,6 +85,6 @@ class EvaluacionController extends Controller
         ->join('estudiantes', 'estudiantes.id', '=', 'evaluaciones.estudiante_id') 
         ->select('cursos.*',  'cursos.titulo as curso', 'estudiantes.nombre as estudiante')
         ->get();
-        return json_encode(['evaluaciones' => $evaluaciones]);
+        return json_encode(['evaluaciones' => $evaluaciones, 'success' => true]);
     }
 }
